@@ -7,7 +7,7 @@ import lombok.Builder;
 import lombok.Getter;
 
 @Getter
-public class CreateMemberRequest {
+public class CreateMemberRequestDto {
     @Email
     @NotEmpty(message = "이메일을 입력해주세요.")
     private String email;
@@ -31,7 +31,7 @@ public class CreateMemberRequest {
     private Gender gender;
 
     @Builder
-    public CreateMemberRequest(String email, String password, String name, String city, String street, String zipcode, Gender gender){
+    public CreateMemberRequestDto(String email, String password, String name, String city, String street, String zipcode, Gender gender){
         this.email = email;
         this.password = password;
         this.name = name;

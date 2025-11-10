@@ -1,9 +1,10 @@
 package com.board.api;
 
-import com.board.api.dto.board.CreateBoardRequest;
-import com.board.api.dto.board.BoardResponse;
-import com.board.api.dto.member.CreateMemberRequest;
+import com.board.api.dto.board.CreateBoardRequestDto;
+import com.board.api.dto.board.BoardResponseDto;
+import com.board.api.dto.member.CreateMemberRequestDto;
 import com.board.api.entity.Gender;
+import com.board.api.entity.Member;
 import com.board.api.repository.MemberRepository;
 import com.board.api.service.BoardService;
 import com.board.api.service.MemberService;
@@ -29,18 +30,18 @@ public class BoardServiceTest {
         // 회원 생성
         Long memberId = createMember();
         // 게시글 생성
-        CreateBoardRequest createBoardRequest = new CreateBoardRequest("originalTitle", "originalContent");
+        CreateBoardRequestDto createBoardRequestDto = new CreateBoardRequestDto("originalTitle", "originalContent");
 
         //when
         // 게시글 등록
-        Long boardId = boardService.createBoard(createBoardRequest,memberId);
+        Long boardId = boardService.createBoard(createBoardRequestDto,memberId);
 
         //then
         // 등록된 게시글 조회
-        BoardResponse boardResponse = boardService.findBoardById(boardId);
-        Assertions.assertEquals(boardResponse.getId(), boardId);
-        Assertions.assertEquals(boardResponse.getTitle(), "originalTitle");
-        Assertions.assertEquals(boardResponse.getContent(), "originalContent");
+        BoardResponseDto boardResponseDto = boardService.findBoardById(boardId);
+        Assertions.assertEquals(boardResponseDto.getId(), boardId);
+        Assertions.assertEquals(boardResponseDto.getTitle(), "originalTitle");
+        Assertions.assertEquals(boardResponseDto.getContent(), "originalContent");
     }
 
     @Test
@@ -50,21 +51,18 @@ public class BoardServiceTest {
         // 회원 생성
         Long memberId = createMember();
         // 게시글 생성
-        CreateBoardRequest createBoardRequest = new CreateBoardRequest("originalTitle", "originalContent");
+        CreateBoardRequestDto createBoardRequestDto = new CreateBoardRequestDto("originalTitle", "originalContent");
         // 게시글 등록
-        Long boardId = boardService.createBoard(createBoardRequest, memberId);
+        Long boardId = boardService.createBoard(createBoardRequestDto, memberId);
         // 수정할 게시글 생성
-        CreateBoardRequest modifiedBoardFormDto = new CreateBoardRequest("modifiedTitle", "modifiedContent");
+        CreateBoardRequestDto modifiedBoardFormDto = new CreateBoardRequestDto("modifiedTitle", "modifiedContent");
 
         //when
         // 게시글 수정
-        Long updateBoardId = boardService.updateBoard(modifiedBoardFormDto,boardId);
+        BoardResponseDto boardResponseDto = boardService.updateBoard(modifiedBoardFormDto,boardId);
 
-        //then
-        // 수정 후 게시글 조회
-        BoardResponse boardResponse = boardService.findBoardById(boardId);
-        Assertions.assertNotEquals("originalTitle", boardResponse.getTitle());
-        Assertions.assertNotEquals("originalContent", boardResponse.getContent());
+        Assertions.assertNotEquals("originalTitle", boardResponseDto.getTitle());
+        Assertions.assertNotEquals("originalContent", boardResponseDto.getContent());
 
     }
 
@@ -75,18 +73,18 @@ public class BoardServiceTest {
         // 회원 생성
         Long memberId = createMember();
         // 게시글 생성
-        CreateBoardRequest createBoardRequest = new CreateBoardRequest("originalTitle", "originalContent");
+        CreateBoardRequestDto createBoardRequestDto = new CreateBoardRequestDto("originalTitle", "originalContent");
         // 게시글 등록
-        Long boardId = boardService.createBoard(createBoardRequest, memberId);
+        BoardResponseDto boardResponseDto = boardService.createBoard(createBoardRequestDto, memberId);
 
 
         // 게시글 삭제
-        boardService.deleteBoard(boardId);
+        boardService.deleteBoard(boardResponseDto.getId());
 
 
         // 삭제된 게시글 조회
         IllegalArgumentException exception = Assertions.assertThrows(IllegalArgumentException.class, () -> {
-            boardService.findBoardById(boardId);
+            boardService.findBoardById(boardResponseDto.getId());
         });
 
         // 예외 메시지 출력
@@ -95,8 +93,8 @@ public class BoardServiceTest {
     }
 
 
-    public Long createMember(){
-        CreateMemberRequest createMemberRequest = CreateMemberRequest.builder()
+    public Member createMember(){
+        CreateMemberRequestDto createMemberRequestDto = CreateMemberRequestDto.builder()
                 .name("test")
                 .email("test@test.com")
                 .gender(Gender.M)
@@ -106,7 +104,7 @@ public class BoardServiceTest {
                 .password("test1234")
                 .build();
 
-        return memberService.create(createMemberRequest);
+        return memberService.create(createMemberRequestDto);
     }
 
 }

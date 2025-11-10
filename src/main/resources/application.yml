@@ -4,7 +4,7 @@ spring:
       matching-strategy: ant_path_matcher
 
   datasource:
-    url: jdbc:mysql://localhost:3306/study?userInformationSchema=true&characterEncoding=UTF-8&useSSL=true
+    url: jdbc:mysql://localhost:3306/study?characterEncoding=UTF-8&useSSL=false&serverTimezone=Asia/Seoul
     username: happycarrot
     password: jmh3385
     driver-class-name: com.mysql.cj.jdbc.Driver
@@ -32,3 +32,6 @@ springdoc:
     tags-sorter: alpha
     operations-sorter: alpha
     doc-expansion: none
+
+jwt:
+  access-token-key: dskfjaskjfhkjhefjknxiu3q59534972y3499h

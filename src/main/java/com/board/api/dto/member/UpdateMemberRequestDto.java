@@ -3,7 +3,7 @@ package com.board.api.dto.member;
 import lombok.Getter;
 
 @Getter
-public class UpdateMemberRequest {
+public class UpdateMemberRequestDto {
     private String name;
     private String password;
     private String city;

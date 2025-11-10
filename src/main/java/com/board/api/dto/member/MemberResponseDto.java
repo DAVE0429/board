@@ -1,11 +1,12 @@
 package com.board.api.dto.member;
 
 import com.board.api.entity.Gender;
+import com.board.api.entity.Member;
 import lombok.Builder;
 import lombok.Getter;
 
 @Getter
-public class MemberResponse {
+public class MemberResponseDto {
     private Long id;
     private String email;
     private String name;
@@ -17,7 +18,7 @@ public class MemberResponse {
     private String modifiedDate;
 
     @Builder
-    public MemberResponse(Long id
+    public MemberResponseDto(Long id
             , String email
             , String name
             , String city
@@ -38,5 +39,18 @@ public class MemberResponse {
         this.modifiedDate = modifiedDate;
     }
 
+    public static MemberResponseDto from(Member member){
+        return MemberResponseDto.builder()
+                .id(member.getId())
+                .email(member.getEmail())
+                .name(member.getName())
+                .city(member.getAddress().getCity())
+                .street(member.getAddress().getStreet())
+                .zipcode(member.getAddress().getZipcode())
+                .gender(member.getGender())
+                .createdDate(member.getCreatedDate())
+                .modifiedDate(member.getModifiedDate())
+                .build();
+    }
 
 }

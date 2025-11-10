@@ -5,7 +5,7 @@ import lombok.Builder;
 import lombok.Getter;
 
 @Getter
-public class UpdateBoardRequest {
+public class UpdateBoardRequestDto {
     @NotEmpty(message="제목을 입력해주세요.")
     private String title;
 
@@ -13,7 +13,7 @@ public class UpdateBoardRequest {
     private String content;
 
     @Builder
-    public UpdateBoardRequest(String title, String content){
+    public UpdateBoardRequestDto(String title, String content){
         this.title = title;
         this.content = content;
     }

@@ -1,7 +1,9 @@
 package com.board.api.controller;
 
-import com.board.api.dto.board.BoardResponse;
-import com.board.api.dto.board.CreateBoardRequest;
+import com.board.api.dto.board.BoardResponseDto;
+import com.board.api.dto.board.CreateBoardRequestDto;
+import com.board.api.dto.board.UpdateBoardRequestDto;
+import com.board.api.entity.Member;
 import com.board.api.service.BoardService;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.tags.Tag;
@@ -13,9 +15,9 @@ import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Sort;
 import org.springframework.data.web.PageableDefault;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.access.prepost.PreAuthorize;
+import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.web.bind.annotation.*;
-
-import java.util.List;
 
 @Tag(name="게시판")
 @RestController
@@ -26,53 +28,69 @@ public class BoardController {
     private final BoardService boardService;
 
     @Operation(summary = "게시판 - 게시판 생성")
+    @PreAuthorize("isAuthenticated()")
     @PostMapping("")
     public ResponseEntity create(
-            @RequestBody CreateBoardRequest createBoardRequest
-            ,Long memberId
+            @AuthenticationPrincipal Member member,
+            @RequestBody CreateBoardRequestDto createBoardRequestDto
+
             ){
-        Long boardId = boardService.createBoard(createBoardRequest, memberId);
-        return ResponseEntity.ok().body(boardId);
+        if(member == null) {
+            throw new RuntimeException("로그인한 사용자 정보가 없습니다.");
+        }
+        BoardResponseDto boardResponseDto = boardService.createBoard(createBoardRequestDto, member);
+        return ResponseEntity.ok().body(boardResponseDto);
     }
 
     @Operation(summary = "게시판 - 전체 게시글 조회 (페이징 포함)")
     @GetMapping("")
     @PageableAsQueryParam
-    public ResponseEntity<Page<BoardResponse>> findAllBoards(
+    public ResponseEntity<Page<BoardResponseDto>> findAllBoards(
             @ParameterObject @PageableDefault( size = 10, sort = "id", direction = Sort.Direction.DESC) Pageable pageable
             ){
-        Page<BoardResponse> result = boardService.findAllBoards(pageable);
+        Page<BoardResponseDto> result = boardService.findAllBoards(pageable);
         return ResponseEntity.ok(result);
     }
 
     @Operation(summary = "게시판 - 게시글 검색")
     @GetMapping("/search")
-    public ResponseEntity<Page<BoardResponse>> search(
+    public ResponseEntity<Page<BoardResponseDto>> search(
             @ParameterObject
             @PageableDefault(size = 10, sort = "id", direction = Sort.Direction.DESC)Pageable pageable
             ,@RequestParam String keyword){
 
 
-        Page<BoardResponse> searchResult = boardService.search(keyword,pageable);
+        Page<BoardResponseDto> searchResult = boardService.search(keyword,pageable);
 
         return ResponseEntity.ok(searchResult);
     }
 
     @Operation(summary = "게시판 - 게시판 수정")
+    @PreAuthorize("isAuthenticated()")
     @PutMapping("{id}")
     public ResponseEntity update(
             @PathVariable("id") Long id,
-            @RequestBody CreateBoardRequest updateBoardRequestDto
+            @AuthenticationPrincipal Member member,
+            @RequestBody UpdateBoardRequestDto updateBoardRequestDto
     ){
-        Long boardId = boardService.updateBoard(updateBoardRequestDto,id);
-        return ResponseEntity.ok().body(boardId);
+        if (member == null) {
+            throw new RuntimeException("로그인한 사용자 정보가 없습니다.");
+        }
+        BoardResponseDto boardResponseDto = boardService.updateBoard(updateBoardRequestDto,id,member);
+        return ResponseEntity.ok().body(boardResponseDto);
     }
 
     @Operation(summary = "게시판 - 게시판 삭제")
+    @PreAuthorize("isAuthenticated()")
     @DeleteMapping("{id}")
-    public ResponseEntity delete(@PathVariable("id") Long id){
-        Long boardId = boardService.deleteBoard(id);
+    public ResponseEntity delete(@PathVariable("id") Long id,
+                                 @AuthenticationPrincipal Member member){
+        if (member == null) {
+            throw new RuntimeException("로그인한 사용자 정보가 없습니다.");
+        }
+        Long boardId = boardService.deleteBoard(id,member);
         return ResponseEntity.ok().body(boardId);
     }
 
 }
+// bearer cors security 흐름 board 기능 정리

@@ -1,11 +1,14 @@
 package com.board.api.service;
 
-import com.board.api.dto.member.CreateMemberRequest;
-import com.board.api.dto.member.MemberResponse;
+import com.board.api.config.JwtTokenProvider;
+import com.board.api.dto.member.CreateMemberRequestDto;
+import com.board.api.dto.member.LoginMemberRequestDto;
+import com.board.api.dto.member.MemberResponseDto;
 import com.board.api.entity.Address;
 import com.board.api.entity.Member;
 import com.board.api.repository.MemberRepository;
 import lombok.RequiredArgsConstructor;
+import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -16,29 +19,31 @@ import java.util.List;
 @RequiredArgsConstructor
 @Transactional(readOnly = true)
 public class MemberService {
-
+    private final PasswordEncoder passwordEncoder;
     private final MemberRepository memberRepository;
+    private final JwtTokenProvider jwtTokenProvider;
 
     @Transactional
-    public Long create(CreateMemberRequest createMemberRequest){
+    public MemberResponseDto create(CreateMemberRequestDto createMemberRequestDto){
+        String encodedPassword = passwordEncoder.encode(createMemberRequestDto.getPassword());
         Member member = Member.builder()
-                .name(createMemberRequest.getName())
-                .email(createMemberRequest.getEmail())
-                .address(new Address(createMemberRequest.getCity(), createMemberRequest.getStreet(), createMemberRequest.getZipcode()))
-                .gender(createMemberRequest.getGender())
-                .password(createMemberRequest.getPassword())
+                .name(createMemberRequestDto.getName())
+                .email(createMemberRequestDto.getEmail())
+                .address(new Address(createMemberRequestDto.getCity(), createMemberRequestDto.getStreet(), createMemberRequestDto.getZipcode()))
+                .gender(createMemberRequestDto.getGender())
+                .password(encodedPassword)
                 .build();
 
         memberRepository.save(member);
 
-        return member.getId();
+        return MemberResponseDto.from(member);
     }
 
     // 사용자 조회
-    public MemberResponse findMemberById(Long id){
+    public MemberResponseDto findMemberById(Long id){
         Member member = memberRepository.findById(id).orElseThrow(() -> new IllegalArgumentException("회원을 찾을 수 없습니다."));
 
-        MemberResponse memberResponse = MemberResponse.builder()
+        MemberResponseDto memberResponseDto = MemberResponseDto.builder()
                 .id(member.getId())
                 .name(member.getName())
                 .city(member.getAddress().getCity())
@@ -49,15 +54,15 @@ public class MemberService {
                 .modifiedDate(member.getModifiedDate())
                 .build();
 
-        return memberResponse;
+        return memberResponseDto;
     }
 
     // 전체 사용자 조회
-    public List<MemberResponse> findAllMember(){
+    public List<MemberResponseDto> findAllMember(){
         List<Member> members = memberRepository.findAll();
-        List<MemberResponse> responseList = new ArrayList<>();
+        List<MemberResponseDto> responseList = new ArrayList<>();
         for( Member member : members ){
-            MemberResponse response =  MemberResponse.builder()
+            MemberResponseDto response =  MemberResponseDto.builder()
                     .id(member.getId())
                     .name(member.getName())
                     .city(member.getAddress().getCity())
@@ -79,4 +84,13 @@ public class MemberService {
         memberRepository.delete(member);
     }
 
+    public String login(LoginMemberRequestDto loginMemberRequestDto) {
+        Member member = memberRepository.findByEmail(loginMemberRequestDto.getEmail()).orElseThrow(() -> new RuntimeException("찾을수 없는 유저입니다."));
+
+        if(!passwordEncoder.matches(loginMemberRequestDto.getPassword(), member.getPassword())) {
+            throw new RuntimeException("찾을수 없는 유저입니다 이메일이나 비밀번호를 다시 확인해주세요");
+        }
+
+        return jwtTokenProvider.createToken(member.getEmail());
+    }
 }

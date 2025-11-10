@@ -5,7 +5,7 @@ import lombok.Builder;
 import lombok.Getter;
 
 @Getter
-public class CreateBoardRequest {
+public class CreateBoardRequestDto {
 
     @NotEmpty(message ="제목을 입력해주세요.")
     String title;
@@ -14,7 +14,7 @@ public class CreateBoardRequest {
     String content;
 
     @Builder
-    public CreateBoardRequest(String title, String content){
+    public CreateBoardRequestDto(String title, String content){
         this.title = title;
         this.content = content;
     }
