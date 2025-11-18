@@ -19,6 +19,10 @@ public class Board extends BaseEntity{
     private String content;
 
     @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name ="category_id")
+    private Category category;
+
+    @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name ="member_id")
     private Member member;
 
@@ -34,3 +38,5 @@ public class Board extends BaseEntity{
         this.content = content;
     }
 }
+
+// 1 대 1 카테고리 crud 가능 - 게시글 - 카테고리의 게시글
