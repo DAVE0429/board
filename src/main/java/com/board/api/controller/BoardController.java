@@ -80,6 +80,20 @@ public class BoardController {
         return ResponseEntity.ok().body(boardResponseDto);
     }
 
+    @Operation(summary = "게시판 - 카테고리 별 게시글 조회")
+    @GetMapping("/category/{categoryId}")
+    public ResponseEntity<Page<BoardResponseDto>> findAllByCategory(@PathVariable Long categoryId, @ParameterObject @PageableDefault( size = 10, sort = "id", direction = Sort.Direction.DESC) Pageable pageable){
+        Page<BoardResponseDto> boards = boardService.findBoardsByCategory(pageable,categoryId);
+        return ResponseEntity.ok(boards);
+    }
+
+    @Operation(summary = "게시글 - 게시글 한개 조회")
+    @GetMapping("{id}")
+    public ResponseEntity findById(@PathVariable("id") Long id){
+        BoardResponseDto result = boardService.findBoardById(id);
+        return ResponseEntity.ok().body(result);
+    }
+
     @Operation(summary = "게시판 - 게시판 삭제")
     @PreAuthorize("isAuthenticated()")
     @DeleteMapping("{id}")

@@ -3,8 +3,9 @@ package com.board.api.dto.category;
 import com.board.api.entity.Category;
 
 import lombok.Builder;
+import lombok.Getter;
 
-
+@Getter
 public class CategoryResponseDto {
 
     private Long id;

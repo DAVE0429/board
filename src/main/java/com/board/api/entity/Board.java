@@ -19,7 +19,7 @@ public class Board extends BaseEntity{
     private String content;
 
     @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name ="category_id")
+    @JoinColumn(name ="category_id", nullable = false)
     private Category category;
 
     @ManyToOne(fetch = FetchType.LAZY)
@@ -27,15 +27,17 @@ public class Board extends BaseEntity{
     private Member member;
 
     @Builder
-    public Board(String title, String content, Member member){
+    public Board(String title, String content, Member member, Category category){
         this.title = title;
         this.content = content;
         this.member = member;
+        this.category = category;
     }
 
-    public void update(String title, String content){
+    public void update(String title, String content,Category category){
         this.title = title;
         this.content = content;
+        this.category = category;
     }
 }
 
