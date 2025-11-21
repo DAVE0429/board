@@ -3,6 +3,9 @@ package com.board.api.entity;
 import jakarta.persistence.*;
 import lombok.*;
 
+import java.util.ArrayList;
+import java.util.List;
+
 @Table(name="board")
 @Entity
 @ToString
@@ -25,6 +28,12 @@ public class Board extends BaseEntity{
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name ="member_id")
     private Member member;
+
+    @OneToMany(fetch = FetchType.LAZY,mappedBy = "board")
+    private List<Comment> comments = new ArrayList<>();
+
+    @OneToMany(fetch = FetchType.LAZY,mappedBy = "board")
+    private List<Like> likes = new ArrayList<>();
 
     @Builder
     public Board(String title, String content, Member member, Category category){

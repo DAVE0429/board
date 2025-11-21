@@ -31,8 +31,12 @@ public class Member extends BaseEntity implements UserDetails {
     @Embedded
     private Address address;
 
+
     @OneToMany(fetch = FetchType.LAZY, mappedBy = "member")
     private List<Board> boards = new ArrayList<>();
+
+    @OneToMany(fetch = FetchType.LAZY, mappedBy = "member")
+    private List<Comment> Comments = new ArrayList<>();
 
     @Enumerated(EnumType.STRING)
     private Gender gender;

@@ -111,8 +111,7 @@ public class BoardService {
                 throw new IllegalStateException("등록된 게시글이 없습니다.");
             }
 
-            return boardPage.map(board -> BoardResponseDto.from(board)
-            );
+            return boardPage.map(board -> BoardResponseDto.from(board));
 
         } catch (DataAccessException e) {
             throw new RuntimeException("데이터베이스 접근 중 오류가 발생했습니다.", e);
