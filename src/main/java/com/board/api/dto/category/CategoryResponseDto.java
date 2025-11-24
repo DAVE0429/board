@@ -2,8 +2,11 @@ package com.board.api.dto.category;
 
 import com.board.api.entity.Category;
 
+import com.fasterxml.jackson.annotation.JsonFormat;
 import lombok.Builder;
 import lombok.Getter;
+
+import java.time.LocalDateTime;
 
 @Getter
 public class CategoryResponseDto {
@@ -12,12 +15,14 @@ public class CategoryResponseDto {
 
     private String name;
 
-    private String createdDate;
+    @JsonFormat(pattern = "yyyy.MM.dd HH:mm:ss")
+    private LocalDateTime createdDate;
 
-    private String modifiedDate;
+    @JsonFormat(pattern = "yyyy.MM.dd HH:mm:ss")
+    private LocalDateTime modifiedDate;
 
     @Builder
-    public CategoryResponseDto(Long id, String name, String createdDate, String modifiedDate){
+    public CategoryResponseDto(Long id, String name, LocalDateTime createdDate, LocalDateTime modifiedDate){
         this.id = id;
         this.name = name;
         this.createdDate = createdDate;

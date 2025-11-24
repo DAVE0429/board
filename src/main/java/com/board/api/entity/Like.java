@@ -1,23 +1,24 @@
 package com.board.api.entity;
 
 import jakarta.persistence.*;
-import lombok.Builder;
-import lombok.Getter;
+import lombok.*;
 
-@Table(name = "like")
+@Table(name = "likes")
 @Entity
+@ToString
 @Getter
+@NoArgsConstructor(access = AccessLevel.PROTECTED)
 public class Like {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
     @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name ="member_id")
+    @JoinColumn(name ="member_id", nullable = false)
     private Member member;
 
     @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name ="board_id")
+    @JoinColumn(name ="board_id", nullable = false)
     private Board board;
 
     @Builder

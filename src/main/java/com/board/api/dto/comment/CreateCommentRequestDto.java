@@ -8,18 +8,22 @@ import lombok.Getter;
 
 @Getter
 public class CreateCommentRequestDto {
-
+    private Long boardId;
+    private Long parentId;
     private String content;
 
-    public CreateCommentRequestDto(String content){
+    public CreateCommentRequestDto(Long boardId, Long parentId, String content){
+        this.boardId = boardId;
+        this.parentId = parentId;
         this.content = content;
     }
 
-    public Comment toEntity(Member member, Board board){
+    public Comment toEntity(Member member, Board board, Comment parentComment){
         return Comment.builder()
                 .member(member)
                 .board(board)
                 .content(this.content)
+                .parent(parentComment)
                 .build();
     }
 

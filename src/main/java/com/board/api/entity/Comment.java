@@ -2,16 +2,17 @@ package com.board.api.entity;
 
 import com.board.api.dto.comment.UpdateCommentRequestDto;
 import jakarta.persistence.*;
-import lombok.Builder;
-import lombok.Getter;
+import lombok.*;
 
 import java.util.ArrayList;
 import java.util.List;
 
 @Table(name = "comment")
 @Entity
+@ToString
 @Getter
-public class Comment {
+@NoArgsConstructor(access = AccessLevel.PROTECTED)
+public class Comment extends BaseEntity {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -34,12 +35,26 @@ public class Comment {
 
     private String content;
 
+    private boolean deleted = false;
+
+    public void setDeleted(boolean deleted){
+        this.deleted = deleted;
+    }
+
+    public void setContent(String content){
+        this.content = content;
+    }
+
+    public void setMember(Member member){
+        this.member = member;
+    }
 
     @Builder
-    public Comment(Member member, Board board, String content) {
+    public Comment(Member member, Board board, String content, Comment parent) {
         this.member = member;
         this.board = board;
         this.content = content;
+        this.parent = parent;
     }
 
     public Comment update(UpdateCommentRequestDto updateCommentRequestDto) {

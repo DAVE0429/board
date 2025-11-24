@@ -9,7 +9,7 @@ import java.util.List;
 @Table(name="board")
 @Entity
 @ToString
-@Getter @Setter
+@Getter
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
 public class Board extends BaseEntity{
 
@@ -20,6 +20,9 @@ public class Board extends BaseEntity{
     private String title;
 
     private String content;
+
+    @Column(name = "like_count")
+    private Long likeCount = 0L;
 
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name ="category_id", nullable = false)
@@ -48,6 +51,12 @@ public class Board extends BaseEntity{
         this.content = content;
         this.category = category;
     }
-}
 
-// 1 대 1 카테고리 crud 가능 - 게시글 - 카테고리의 게시글
+    public void increaseLike(){
+        this.likeCount += 1;
+    }
+
+    public void decreaseLike(){
+        this.likeCount -= 1;
+    }
+}

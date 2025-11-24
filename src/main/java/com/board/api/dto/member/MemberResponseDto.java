@@ -2,8 +2,11 @@ package com.board.api.dto.member;
 
 import com.board.api.entity.Gender;
 import com.board.api.entity.Member;
+import com.fasterxml.jackson.annotation.JsonFormat;
 import lombok.Builder;
 import lombok.Getter;
+
+import java.time.LocalDateTime;
 
 @Getter
 public class MemberResponseDto {
@@ -14,8 +17,10 @@ public class MemberResponseDto {
     private String street;
     private String zipcode;
     private Gender gender;
-    private String createdDate;
-    private String modifiedDate;
+    @JsonFormat(pattern = "yyyy.MM.dd HH:mm:ss")
+    private LocalDateTime createdDate;
+    @JsonFormat(pattern = "yyyy.MM.dd HH:mm:ss")
+    private LocalDateTime modifiedDate;
 
     @Builder
     public MemberResponseDto(Long id
@@ -25,8 +30,8 @@ public class MemberResponseDto {
             , String street
             , String zipcode
             , Gender gender
-            , String createdDate
-            , String modifiedDate){
+            , LocalDateTime createdDate
+            , LocalDateTime modifiedDate){
 
         this.id = id;
         this.email = email;
