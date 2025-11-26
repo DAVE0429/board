@@ -1,4 +1,4 @@
-package com.board.api.entity;
+package com.board.api.enums;
 
 import lombok.Getter;
 import lombok.RequiredArgsConstructor;

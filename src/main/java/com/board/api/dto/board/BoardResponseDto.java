@@ -39,7 +39,7 @@ public class BoardResponseDto {
 
     }
 
-    public static BoardResponseDto from(Board board) {
+    public static BoardResponseDto from(Board board, Long likeCount, boolean liked) {
         CategoryResponseDto categoryResponseDto = CategoryResponseDto.from(board.getCategory());
         return BoardResponseDto.builder()
                 .id(board.getId())
@@ -47,7 +47,8 @@ public class BoardResponseDto {
                 .title(board.getTitle())
                 .content(board.getContent())
                 .author(board.getMember().getName())
-                .likeCount(board.getLikeCount())
+                .likeCount(likeCount)
+                .liked(liked)
                 .createdDate(board.getCreatedDate())
                 .modifiedDate(board.getModifiedDate())
                 .build();

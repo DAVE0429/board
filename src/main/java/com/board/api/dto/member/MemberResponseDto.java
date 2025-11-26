@@ -1,6 +1,6 @@
 package com.board.api.dto.member;
 
-import com.board.api.entity.Gender;
+import com.board.api.enums.Gender;
 import com.board.api.entity.Member;
 import com.fasterxml.jackson.annotation.JsonFormat;
 import lombok.Builder;

@@ -21,9 +21,6 @@ public class Board extends BaseEntity{
 
     private String content;
 
-    @Column(name = "like_count")
-    private Long likeCount = 0L;
-
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name ="category_id", nullable = false)
     private Category category;
@@ -34,9 +31,6 @@ public class Board extends BaseEntity{
 
     @OneToMany(fetch = FetchType.LAZY,mappedBy = "board")
     private List<Comment> comments = new ArrayList<>();
-
-    @OneToMany(fetch = FetchType.LAZY,mappedBy = "board")
-    private List<Like> likes = new ArrayList<>();
 
     @Builder
     public Board(String title, String content, Member member, Category category){
@@ -52,11 +46,4 @@ public class Board extends BaseEntity{
         this.category = category;
     }
 
-    public void increaseLike(){
-        this.likeCount += 1;
-    }
-
-    public void decreaseLike(){
-        this.likeCount -= 1;
-    }
 }

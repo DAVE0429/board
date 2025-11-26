@@ -46,8 +46,9 @@ public class CommentController {
     @PageableAsQueryParam
     public ResponseEntity<Page<CommentResponseDto>> findAllCommentByBoard(
             @PathVariable("id") Long id,
+            @AuthenticationPrincipal Member member,
             @ParameterObject @PageableDefault(size = 10, direction = Sort.Direction.DESC)Pageable pageable){
-        Page<CommentResponseDto> result = commentService.findAll(id,pageable);
+        Page<CommentResponseDto> result = commentService.findAll(id,member,pageable);
         return ResponseEntity.ok(result);
     }
 

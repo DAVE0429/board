@@ -1,6 +1,6 @@
 package com.board.api.dto.member;
 
-import com.board.api.entity.Gender;
+import com.board.api.enums.Gender;
 import jakarta.validation.constraints.Email;
 import jakarta.validation.constraints.NotEmpty;
 import lombok.Builder;

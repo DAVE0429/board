@@ -3,7 +3,7 @@
 //import com.board.api.dto.board.CreateBoardRequestDto;
 //import com.board.api.dto.board.BoardResponseDto;
 //import com.board.api.dto.member.CreateMemberRequestDto;
-//import com.board.api.entity.Gender;
+//import com.board.api.enums.Gender;
 //import com.board.api.entity.Member;
 //import com.board.api.repository.MemberRepository;
 //import com.board.api.service.BoardService;

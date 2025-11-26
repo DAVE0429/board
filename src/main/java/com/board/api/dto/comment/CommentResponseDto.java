@@ -22,39 +22,27 @@ public class CommentResponseDto {
 
     private List<CommentResponseDto> children;
 
+    private Long likeCount;
+
+    private boolean liked;
+
     private LocalDateTime createdDate;
 
     private LocalDateTime modifiedDate;
 
     @Builder
-    public CommentResponseDto(Long id, MemberResponseDto member, boolean deleted, String content, List<CommentResponseDto> children, LocalDateTime createdDate, LocalDateTime modifiedDate) {
+    public CommentResponseDto(Long id, MemberResponseDto member, boolean deleted, String content, List<CommentResponseDto> children, Long likeCount, boolean liked, LocalDateTime createdDate, LocalDateTime modifiedDate) {
         this.id = id;
         this.member = member;
         this.content = content;
         this.deleted = deleted;
         this.children = children;
+        this.likeCount = likeCount;
+        this.liked = liked;
         this.createdDate = createdDate;
         this.modifiedDate = modifiedDate;
     }
 
-
-
-
-    public static CommentResponseDto from(Comment comment) {
-        MemberResponseDto member = MemberResponseDto.from(comment.getMember());
-        return CommentResponseDto.builder()
-                .id(comment.getId())
-                .member(member)
-                .deleted(comment.isDeleted())
-                .content(comment.getContent())
-                .children(comment.getChildren() == null ? new ArrayList<>() :
-                        comment.getChildren().stream()
-                        .map(CommentResponseDto::from)
-                        .collect(Collectors.toList()))
-                .createdDate(comment.getCreatedDate())
-                .modifiedDate(comment.getModifiedDate())
-                .build();
-    }
 
 
 }

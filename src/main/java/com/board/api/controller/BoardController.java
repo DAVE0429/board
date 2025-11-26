@@ -46,21 +46,23 @@ public class BoardController {
     @GetMapping("")
     @PageableAsQueryParam
     public ResponseEntity<Page<BoardResponseDto>> findAllBoards(
+            @AuthenticationPrincipal Member member,
             @ParameterObject @PageableDefault( size = 10, sort = "id", direction = Sort.Direction.DESC) Pageable pageable
             ){
-        Page<BoardResponseDto> result = boardService.findAllBoards(pageable);
+        Page<BoardResponseDto> result = boardService.findAllBoards(member, pageable);
         return ResponseEntity.ok(result);
     }
 
     @Operation(summary = "게시판 - 게시글 검색")
     @GetMapping("/search")
     public ResponseEntity<Page<BoardResponseDto>> search(
+            @AuthenticationPrincipal Member member,
             @ParameterObject
             @PageableDefault(size = 10, sort = "id", direction = Sort.Direction.DESC)Pageable pageable
             ,@RequestParam String keyword){
 
 
-        Page<BoardResponseDto> searchResult = boardService.search(keyword,pageable);
+        Page<BoardResponseDto> searchResult = boardService.search(member, keyword,pageable);
 
         return ResponseEntity.ok(searchResult);
     }
@@ -82,15 +84,18 @@ public class BoardController {
 
     @Operation(summary = "게시판 - 카테고리 별 게시글 조회")
     @GetMapping("/category/{categoryId}")
-    public ResponseEntity<Page<BoardResponseDto>> findAllByCategory(@PathVariable Long categoryId, @ParameterObject @PageableDefault( size = 10, sort = "id", direction = Sort.Direction.DESC) Pageable pageable){
-        Page<BoardResponseDto> boards = boardService.findBoardsByCategory(pageable,categoryId);
+    public ResponseEntity<Page<BoardResponseDto>> findAllByCategory(
+            @AuthenticationPrincipal Member member,
+            @PathVariable Long categoryId,
+            @ParameterObject @PageableDefault( size = 10, sort = "id", direction = Sort.Direction.DESC) Pageable pageable){
+        Page<BoardResponseDto> boards = boardService.findBoardsByCategory(member, pageable,categoryId);
         return ResponseEntity.ok(boards);
     }
 
     @Operation(summary = "게시글 - 게시글 한개 조회")
     @GetMapping("{id}")
-    public ResponseEntity findById(@PathVariable("id") Long id){
-        BoardResponseDto result = boardService.findBoardById(id);
+    public ResponseEntity findById(@AuthenticationPrincipal Member member, @PathVariable("id") Long id){
+        BoardResponseDto result = boardService.findBoardById(member, id);
         return ResponseEntity.ok().body(result);
     }
 

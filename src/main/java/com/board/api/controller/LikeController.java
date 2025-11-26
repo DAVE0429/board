@@ -1,7 +1,6 @@
 package com.board.api.controller;
 
 import com.board.api.dto.like.LikeRequestDto;
-import com.board.api.dto.like.LikeResponseDto;
 import com.board.api.dto.like.LikerResponseDto;
 import com.board.api.entity.Member;
 import com.board.api.service.LikeService;
@@ -14,6 +13,8 @@ import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
+import java.util.Map;
+
 @Tag(name = "좋아요")
 @RestController
 @RequiredArgsConstructor
@@ -22,15 +23,26 @@ public class LikeController {
 
     private final LikeService likeService;
 
-    @Operation(summary = "좋아요 - 좋아요 및 취소 기능")
+    @Operation(summary = "좋아요 - 좋아요 기능")
     @PostMapping("")
     @PreAuthorize("isAuthenticated()")
-    public ResponseEntity toggleLike(
+    public ResponseEntity like(
             @RequestBody LikeRequestDto requestDto,
             @AuthenticationPrincipal Member member
             ){
-        LikeResponseDto response = likeService.toggleLike(member, requestDto.getBoardId());
-        return ResponseEntity.ok().body(response);
+        boolean liked = likeService.like(member, requestDto);
+        return ResponseEntity.ok().body(Map.of("liked",liked));
+    }
+
+    @Operation(summary = "좋아요 - 좋아요 취소 기능")
+    @DeleteMapping("")
+    @PreAuthorize("isAuthenticated()")
+    public ResponseEntity unlike(
+            @RequestBody LikeRequestDto requestDto,
+            @AuthenticationPrincipal Member member
+    ){
+        boolean unliked = likeService.unLike(member, requestDto);
+        return ResponseEntity.ok().body(Map.of("unliked",unliked));
     }
 
     @Operation(summary = "좋아요 - 게시글에 좋아요한 사람 목록 조회")

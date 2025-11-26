@@ -1,5 +1,6 @@
 package com.board.api.entity;
 
+import com.board.api.enums.TargetType;
 import jakarta.persistence.*;
 import lombok.*;
 
@@ -17,13 +18,18 @@ public class Like {
     @JoinColumn(name ="member_id", nullable = false)
     private Member member;
 
-    @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name ="board_id", nullable = false)
-    private Board board;
+    @Column( name="target_id", nullable = false)
+    private Long targetId;
+
+    @Enumerated(EnumType.STRING)
+    @Column(name = "like_type", nullable = false)
+    private TargetType targetType; // BOARD, COMMENT
+
 
     @Builder
-    public Like(Member member, Board board) {
+    public Like(Member member, Long targetId, TargetType targetType) {
         this.member = member;
-        this.board = board;
+        this.targetId = targetId;
+        this.targetType = targetType;
     }
 }

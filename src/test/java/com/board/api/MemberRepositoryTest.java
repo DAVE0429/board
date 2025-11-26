@@ -1,7 +1,7 @@
 //package com.board.api;
 //
 //import com.board.api.entity.Address;
-//import com.board.api.entity.Gender;
+//import com.board.api.enums.Gender;
 //import com.board.api.entity.Member;
 //import com.board.api.repository.MemberRepository;
 //import jakarta.persistence.EntityNotFoundException;

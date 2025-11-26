@@ -1,6 +1,7 @@
 package com.board.api.entity;
 
 import com.board.api.dto.member.CreateMemberRequestDto;
+import com.board.api.enums.Gender;
 import jakarta.persistence.*;
 import lombok.*;
 import org.springframework.security.core.GrantedAuthority;

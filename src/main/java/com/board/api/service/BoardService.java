@@ -6,9 +6,10 @@ import com.board.api.dto.board.UpdateBoardRequestDto;
 import com.board.api.entity.Board;
 import com.board.api.entity.Category;
 import com.board.api.entity.Member;
+import com.board.api.enums.TargetType;
 import com.board.api.repository.BoardRepository;
 import com.board.api.repository.CategoryRepository;
-import com.board.api.repository.MemberRepository;
+import com.board.api.repository.LikeRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.dao.DataAccessException;
 import org.springframework.data.domain.Page;
@@ -23,8 +24,8 @@ import org.springframework.transaction.annotation.Transactional;
 public class BoardService {
 
     private final BoardRepository boardRepository;
-    private final MemberRepository memberRepository;
     private final CategoryRepository categoryRepository;
+    private final LikeRepository likeRepository;
 
     // 게시글 등록
     @Transactional
@@ -36,7 +37,7 @@ public class BoardService {
 
         boardRepository.save(board);
 
-        return BoardResponseDto.from(board);
+        return BoardResponseDto.from(board, 0L, false);
     }
 
     // 게시글 수정
@@ -51,9 +52,10 @@ public class BoardService {
         }
 
         board.update(updateBoardRequestDto.getTitle(), updateBoardRequestDto.getContent(),category);
+        boolean liked = likeRepository.existsByMemberAndTargetTypeAndTargetId(member, TargetType.BOARD,board.getId());
+        Long likeCount = likeRepository.countByTargetTypeAndTargetId(TargetType.BOARD,board.getId());
 
-
-        return BoardResponseDto.from(board);
+        return BoardResponseDto.from(board, likeCount, liked);
     }
 
     // 게시글 삭제
@@ -75,15 +77,18 @@ public class BoardService {
     }
 
     // 게시글 조회
-    public BoardResponseDto findBoardById(Long id){
+    public BoardResponseDto findBoardById(Member member, Long id){
         Board board = boardRepository.findById(id)
                 .orElseThrow(() -> new IllegalArgumentException("해당 게시글이 존재하지 않습니다. id=" + id));
 
-        return BoardResponseDto.from(board);
+        boolean liked = likeRepository.existsByMemberAndTargetTypeAndTargetId(member, TargetType.BOARD, board.getId());
+        Long likeCount = likeRepository.countByTargetTypeAndTargetId(TargetType.BOARD,board.getId());
+
+        return BoardResponseDto.from(board, likeCount, liked);
     }
 
     // 게시글 전체 조회
-    public Page<BoardResponseDto> findAllBoards(Pageable pageable) {
+    public Page<BoardResponseDto> findAllBoards(Member member, Pageable pageable) {
         try {
             Page<Board> boardPage = boardRepository.findAll(pageable);
 
@@ -91,8 +96,12 @@ public class BoardService {
                 throw new IllegalStateException("등록된 게시글이 없습니다.");
             }
 
-            return boardPage.map(board -> BoardResponseDto.from(board)
-            );
+            return boardPage.map(board -> {
+                boolean liked = likeRepository.existsByMemberAndTargetTypeAndTargetId(member, TargetType.BOARD, board.getId());
+                Long likeCount = likeRepository.countByTargetTypeAndTargetId(TargetType.BOARD,board.getId());
+                BoardResponseDto boardResponseDto = BoardResponseDto.from(board, likeCount, liked);
+                return boardResponseDto;
+            });
 
         } catch (DataAccessException e) {
             throw new RuntimeException("데이터베이스 접근 중 오류가 발생했습니다.", e);
@@ -101,7 +110,7 @@ public class BoardService {
         }
     }
 
-    public Page<BoardResponseDto> findBoardsByCategory(Pageable pageable, Long categoryId){
+    public Page<BoardResponseDto> findBoardsByCategory(Member member, Pageable pageable, Long categoryId){
         try {
             Category category = categoryRepository.findById(categoryId).orElseThrow(() -> new RuntimeException("해당 카테고리를 찾을 수 없습니다."));
 
@@ -111,7 +120,12 @@ public class BoardService {
                 throw new IllegalStateException("등록된 게시글이 없습니다.");
             }
 
-            return boardPage.map(board -> BoardResponseDto.from(board));
+            return boardPage.map(board -> {
+                boolean liked = likeRepository.existsByMemberAndTargetTypeAndTargetId(member, TargetType.BOARD,board.getId());
+                Long likeCount = likeRepository.countByTargetTypeAndTargetId(TargetType.BOARD,board.getId());
+                BoardResponseDto boardResponseDto = BoardResponseDto.from(board, likeCount, liked);
+                return boardResponseDto;
+            });
 
         } catch (DataAccessException e) {
             throw new RuntimeException("데이터베이스 접근 중 오류가 발생했습니다.", e);
@@ -121,9 +135,14 @@ public class BoardService {
     }
 
     // 검색 기능
-    public Page<BoardResponseDto> search(String keyword, Pageable pageable){
+    public Page<BoardResponseDto> search(Member member, String keyword, Pageable pageable){
         Page<Board> boardPage = boardRepository.findByTitleContaining(keyword, pageable);
-        return boardPage.map(board -> BoardResponseDto.from(board));
+
+        return boardPage.map(board -> {
+            boolean liked = likeRepository.existsByMemberAndTargetTypeAndTargetId(member, TargetType.BOARD,board.getId());
+            Long likeCount = likeRepository.countByTargetTypeAndTargetId(TargetType.BOARD,board.getId());
+            return BoardResponseDto.from(board, likeCount, liked);
+        });
     }
 
 
