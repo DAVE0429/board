@@ -3,3 +3,18 @@ SpringBoot와 JPA를 이용하여 게시판 만들기 프로젝트입니다.
 
 ## 기술 스택
 <img src="https://img.shields.io/badge/springboot-6DB33F?style=for-the-badge&logo=springboot&logoColor=white">
+<img src="https://img.shields.io/badge/springsecurity-6DB33F?style=for-the-badge&logo=springsecurity&logoColor=white">
+<img src="https://img.shields.io/badge/mysql-4479A1?style=for-the-badge&logo=mysql&logoColor=white">
+<img src="https://img.shields.io/badge/swagger-85EA2D?style=for-the-badge&logo=swagger&logoColor=white">
+<img src="https://img.shields.io/badge/nginx-009639?style=for-the-badge&logo=nginx&logoColor=white">
+<img src="https://img.shields.io/badge/apachetomcat-f8dc75?style=for-the-badge&logo=apachetomcat&logoColor=white">
+<img src="https://img.shields.io/badge/amazonaws-232F3E?style=for-the-badge&logo=amazonaws&logoColor=white">
+
+## 세부 설명
+[x] 회원가입 및 로그인 기능
+[x] 게시글 작성 및 삭제 - 카테고리 추가
+[x] 검색 기능
+[x] 댓글 기능 (대댓글 가능)
+[x] 게시글 및 댓글 좋아요 기능
+[] 파일 업로드 기능 - 현재 게시글 업로드만 가능 업그레이드 중
+
