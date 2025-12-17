@@ -10,6 +10,7 @@ import com.board.api.repository.BoardRepository;
 import com.board.api.repository.CommentRepository;
 import com.board.api.repository.LikeRepository;
 import lombok.RequiredArgsConstructor;
+import org.springframework.dao.DataIntegrityViolationException;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -34,15 +35,19 @@ public class LikeService {
 
         validateTarget(requestDto);
 
-        Optional<Like> existing = likeRepository.findByMemberAndTargetIdAndTargetType(member, requestDto.getTargetId(), requestDto.getTargetType());
+        try {
+            Like like = new Like(
+                    member,
+                    requestDto.getTargetId(),
+                    requestDto.getTargetType()
+            );
+            likeRepository.save(like);
+            return true;
 
-        if(existing.isPresent()){
+        } catch (DataIntegrityViolationException e) {
+            // UNIQUE(member_id, target_id, target_type) 위반
             return false;
         }
-
-        Like like = new Like(member, requestDto.getTargetId(), requestDto.getTargetType());
-        likeRepository.save(like);
-        return true;
     }
 
     @Transactional

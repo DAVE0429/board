@@ -1,11 +1,14 @@
 package com.board.api.dto.board;
 
+import com.board.api.dto.file.FileDto;
 import com.board.api.entity.Board;
 import com.board.api.entity.Category;
 import com.board.api.entity.Member;
 import jakarta.validation.constraints.NotEmpty;
 import lombok.Builder;
 import lombok.Getter;
+
+import java.util.List;
 
 
 @Getter
@@ -19,6 +22,8 @@ public class CreateBoardRequestDto {
 
     @NotEmpty(message = "카테고리를 설정해주세요.")
     private Long categoryId;
+
+    private List<FileDto> imageFiles;
 
 
     public CreateBoardRequestDto(String title, String content, Long categoryId){

@@ -4,12 +4,20 @@ import com.board.api.enums.TargetType;
 import jakarta.persistence.*;
 import lombok.*;
 
-@Table(name = "likes")
+@Table(
+        name = "likes",
+        uniqueConstraints = {
+                @UniqueConstraint(
+                        name = "uk_likes_member_target",
+                        columnNames = {"member_id", "target_id", "like_type"}
+                )
+        }
+)
 @Entity
 @ToString
 @Getter
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
-public class Like {
+public class Like extends BaseEntity {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
