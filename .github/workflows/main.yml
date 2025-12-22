@@ -19,6 +19,15 @@ jobs:
         java-version: '17'
         distribution: 'temurin'
 
+    - name: Create prod yml
+      run: |
+        echo "${{ secrets.PRODYML }}" > resources/application.yml
+
+    - name : check yml
+      run: |
+        cd resources
+        ls
+
     # 3. Gradle 빌드 (jar 생성)
     - name: Build with Gradle
       run: |
