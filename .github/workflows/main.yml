@@ -19,6 +19,10 @@ jobs:
         java-version: '17'
         distribution: 'temurin'
 
+    - name: check ls
+      run: |
+        ls
+
     - name: Create prod yml
       run: |
         echo "${{ secrets.PRODYML }}" > resources/application.yml
