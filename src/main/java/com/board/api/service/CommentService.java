@@ -43,6 +43,10 @@ public class CommentService {
         Comment comment = requestDto.toEntity(member, board, parentComment);
         Comment newComment = commentRepository.save(comment);
 
+        if(!board.getMember().equals(member)){
+
+        }
+
          return CommentResponseDto.builder()
                 .id(newComment.getId())
                 .member(MemberResponseDto.from(newComment.getMember()))

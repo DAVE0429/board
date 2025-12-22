@@ -32,6 +32,9 @@ public class Board extends BaseEntity{
     @OneToMany(fetch = FetchType.LAZY,mappedBy = "board")
     private List<Comment> comments = new ArrayList<>();
 
+    @OneToMany(fetch = FetchType.LAZY, mappedBy = "board")
+    private List<Bookmark> bookmarks = new ArrayList<>();
+
     @Builder
     public Board(String title, String content, Member member, Category category){
         this.title = title;

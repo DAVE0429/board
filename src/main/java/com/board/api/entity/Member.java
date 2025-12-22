@@ -40,6 +40,9 @@ public class Member extends BaseEntity implements UserDetails {
     @OneToMany(fetch = FetchType.LAZY, mappedBy = "uploader")
     private List<Files> files = new ArrayList<>();
 
+    @OneToMany(fetch = FetchType.LAZY, mappedBy = "member")
+    private List<Bookmark> bookmarks = new ArrayList<>();
+
     @Enumerated(EnumType.STRING)
     private Gender gender;
 
