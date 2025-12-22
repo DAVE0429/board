@@ -21,6 +21,7 @@ jobs:
 
     - name: check ls
       run: |
+        cd src/main
         ls
 
     - name: Create prod yml
