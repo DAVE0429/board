@@ -30,6 +30,9 @@ jobs:
         if [ -z "${{ secrets.EC2_HOST }}" ]; then echo "HOST is EMPTY"; else echo "HOST is SET"; fi
         if [ -z "${{ secrets.EC2_SSH_KEY }}" ]; then echo "KEY is EMPTY"; else echo "KEY is SET"; fi
 
+    - name: ls test
+      run: |
+        ls
     # 4. 빌드된 Jar를 EC2로 전송 (SCP)
     - name: Copy Jar to EC2
       uses: appleboy/scp-action@master
