@@ -25,11 +25,11 @@ jobs:
 
     - name: Create prod yml
       run: |
-        echo "${{ secrets.PRODYML }}" > resources/application.yml
+        echo "${{ secrets.PRODYML }}" > src/main/resources/application.yml
 
     - name : check yml
       run: |
-        cd resources
+        cd src/main/resources
         ls
 
     # 3. Gradle 빌드 (jar 생성)
